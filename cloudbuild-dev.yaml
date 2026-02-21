@@ -1,0 +1,69 @@
+steps:
+  - name: "node:20"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        cd frontend && corepack enable pnpm && pnpm install
+    dir: "."
+
+  - name: "node:20"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        cd frontend && npm run build
+    env:
+      - "NUXT_PUBLIC_IDP_BASE_URL=https://ntask-idp-dev-backend-la46tdhnda-uc.a.run.app"
+      - "NUXT_PUBLIC_IDP_FRONTEND_URL=https://ntask-idp-dev-frontend-la46tdhnda-uc.a.run.app"
+      - "NUXT_PUBLIC_IDP_CLIENT_ID=emissor-nota-fiscal-client"
+      - "NUXT_PUBLIC_PROCESSOS_URL=https://ntask-processos-frontend-dev-la46tdhnda-uc.a.run.app"
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:$SHORT_SHA"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:dev-latest"
+      - "-f"
+      - "frontend/Dockerfile"
+      - "--build-arg"
+      - "NUXT_PUBLIC_IDP_BASE_URL=https://ntask-idp-dev-backend-la46tdhnda-uc.a.run.app"
+      - "--build-arg"
+      - "NUXT_PUBLIC_IDP_FRONTEND_URL=https://ntask-idp-dev-frontend-la46tdhnda-uc.a.run.app"
+      - "--build-arg"
+      - "NUXT_PUBLIC_IDP_CLIENT_ID=emissor-nota-fiscal-client"
+      - "--build-arg"
+      - "NUXT_PUBLIC_PROCESSOS_URL=https://ntask-processos-frontend-dev-la46tdhnda-uc.a.run.app"
+      - "frontend"
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:$SHORT_SHA"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:dev-latest"]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "emissor-nota-fiscal-frontend-dev"
+      - "--image=gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:$SHORT_SHA"
+      - "--region=us-central1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--port=8080"
+      - "--memory=512Mi"
+      - "--min-instances=0"
+      - "--max-instances=2"
+
+images:
+  - "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:$SHORT_SHA"
+  - "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:dev-latest"
+
+timeout: "900s"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

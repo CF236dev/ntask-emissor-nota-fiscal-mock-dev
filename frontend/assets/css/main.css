@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn-primary {
+  @apply bg-ntask-blue hover:bg-ntask-blue-dark text-white font-semibold py-2 px-4 rounded-lg transition-colors;
+}
