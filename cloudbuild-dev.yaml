@@ -58,6 +58,7 @@ steps:
       - "--memory=512Mi"
       - "--min-instances=0"
       - "--max-instances=2"
+      - "--service-account=ntask-idp-dev-frontend@ntask-dev-cf236.iam.gserviceaccount.com"
 
 images:
   - "gcr.io/$PROJECT_ID/emissor-nota-fiscal-frontend:$SHORT_SHA"
