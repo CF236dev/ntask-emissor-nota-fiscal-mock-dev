@@ -42,7 +42,7 @@ function handleLogout() {
         rel="noopener noreferrer"
         class="text-2xl font-bold text-ntask-blue"
       >
-        nTask IdP
+        nTask Emissor NF
       </a>
 
       <div class="flex items-center gap-4">
