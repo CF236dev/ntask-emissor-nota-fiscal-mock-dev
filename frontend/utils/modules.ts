@@ -27,6 +27,13 @@ export function getModules(config: {
       externalUrl: `${idpFrontendUrl}/clientes`,
     },
     {
+      id: "preposto",
+      label: "Prepostos",
+      icon: "👥",
+      color: "#5cb85c",
+      externalUrl: `${idpFrontendUrl}/preposto`,
+    },
+    {
       id: "processos",
       label: "Controle de Processos",
       icon: "📁",

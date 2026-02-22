@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getModules } from "~/utils/modules";
 import type { Module } from "~/utils/modules";
+import ModulesPopup from "~/components/pop-ups/ModulesPopup.vue";
 
 const config = useRuntimeConfig();
 const authStore = useAuthStore();
